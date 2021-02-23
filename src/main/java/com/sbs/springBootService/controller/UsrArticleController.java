@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sbs.springBootService.dto.Article;
@@ -33,11 +34,11 @@ public class UsrArticleController {
 	@RequestMapping("/usr/article/doAdd")
 	@ResponseBody
 	public ResultData doAdd(String title, String body) {
-		if (title != null) {
+		if (title == null) {
 			return new ResultData("F-1", "제목을 입력해주세요.");
 		}
 
-		if (body != null) {
+		if (body == null) {
 			return new ResultData("F-1", "내용을 입력해주세요.");
 		}
 
@@ -46,7 +47,10 @@ public class UsrArticleController {
 
 	@RequestMapping("/usr/article/doDelete")
 	@ResponseBody
-	public ResultData doDelete(int id) {
+	public ResultData doDelete(Integer id) {
+		if (id == null) {
+			return new ResultData("F-1", "아이디를 입력해주세요.");
+		}
 		Article article = articleService.getArticle(id);
 
 		if (article == null) {
@@ -59,7 +63,18 @@ public class UsrArticleController {
 
 	@RequestMapping("/usr/article/doModify")
 	@ResponseBody
-	public ResultData doModify(int id, String title, String body) {
+	public ResultData doModify(Integer id, String title, String body) {
+		if (id == null) {
+			return new ResultData("F-1", "아이디를 입력해주세요.");
+		}
+		if (title == null) {
+			return new ResultData("F-1", "제목을 입력해주세요.");
+		}
+
+		if (body == null) {
+			return new ResultData("F-1", "내용을 입력해주세요.");
+		}
+
 		Article article = articleService.getArticle(id);
 
 		if (article == null) {
