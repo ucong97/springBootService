@@ -1,6 +1,7 @@
 package com.sbs.springBootService.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.sbs.springBootService.dao.ArticleDao;
 import com.sbs.springBootService.dto.Article;
 import com.sbs.springBootService.dto.ResultData;
+import com.sbs.springBootService.util.Util;
 
 @Service // Conponent
 public class ArticleService {
@@ -22,10 +24,10 @@ public class ArticleService {
 		return articleDao.getArticles(searchKeywordType, searchKeyword);
 	}
 
-	public ResultData addArticle(String title, String body) {
-		articleDao.addArticle(title, body);
+	public ResultData addArticle(Map<String, Object> param) {
+		articleDao.addArticle(param);
 
-		int id = 1; // 임시
+		int id = Util.getAsInt(param.get("id"), 0);
 
 		return new ResultData("S-1", "성공", "id", id);
 	}
