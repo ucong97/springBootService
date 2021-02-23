@@ -40,14 +40,42 @@ public class UsrArticleController {
 
 	@RequestMapping("/usr/article/doAdd")
 	@ResponseBody
-	public Map<String,Object> doAdd(String regDate, String title, String body) {
+	public Map<String, Object> doAdd(String regDate, String title, String body) {
 		articles.add(new Article(++articlesLastId, regDate, title, body));
-		
-		Map<String,Object> rs = new HashMap<>();
+
+		Map<String, Object> rs = new HashMap<>();
 		rs.put("resultCode", "S-1");
 		rs.put("msg", "성공");
 		rs.put("id", articlesLastId);
-		
+
 		return rs;
+	}
+
+	@RequestMapping("/usr/article/doDelete")
+	@ResponseBody
+	public Map<String, Object> doDelete(int id) {
+		boolean deleteArticleRs = deleteArticle(id);
+
+		Map<String, Object> rs = new HashMap<>();
+
+		if (deleteArticleRs) {
+			rs.put("resultCode", "S-1");
+			rs.put("msg", "성공");
+		} else {
+			rs.put("resultCode", "F-1");
+			rs.put("msg", "해당 게시물은 존재하지 않습니다.");
+		}
+
+		return rs;
+	}
+
+	private boolean deleteArticle(int id) {
+		for (Article article : articles) {
+			if (article.getId() == id) {
+				articles.remove(article);
+				return true;
+			}
+		}
+		return false;
 	}
 }
