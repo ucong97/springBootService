@@ -49,7 +49,7 @@ public class UsrArticleController {
 		if (searchKeyword == null) {
 			searchKeywordType = null;
 		}
-		
+
 		return articleService.getArticles(searchKeywordType, searchKeyword);
 	}
 
