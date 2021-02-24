@@ -85,13 +85,6 @@ public class UsrArticleController {
 		if (id == null) {
 			return new ResultData("F-1", "아이디를 입력해주세요.");
 		}
-		if (title == null) {
-			return new ResultData("F-1", "제목을 입력해주세요.");
-		}
-
-		if (body == null) {
-			return new ResultData("F-1", "내용을 입력해주세요.");
-		}
 
 		Article article = articleService.getArticle(id);
 
