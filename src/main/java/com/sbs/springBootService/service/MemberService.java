@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.sbs.springBootService.dao.MemberDao;
+import com.sbs.springBootService.dto.Member;
 import com.sbs.springBootService.dto.ResultData;
 import com.sbs.springBootService.util.Util;
 
@@ -21,4 +22,9 @@ public class MemberService {
 
 		return new ResultData("S-1", String.format("%s님 환영합니다.", param.get("nickname")), "id", id);
 	}
+
+	public Member getMemberByLoginId(String loginId) {
+		return memberDao.getMemberByLoginId(loginId);
+	}
+
 }
