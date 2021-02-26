@@ -37,4 +37,8 @@ public class MemberService {
 		return actorId == 1;
 	}
 
+	public Member getMember(int id) {
+		return memberDao.getMember(id);
+	}
+
 }
