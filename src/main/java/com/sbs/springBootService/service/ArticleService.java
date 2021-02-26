@@ -76,4 +76,12 @@ public class ArticleService {
 	public Board getBoard(int id) {
 		return articleDao.getBoard(id);
 	}
+
+	public ResultData addReply(Map<String, Object> param) {
+		articleDao.addReply(param);
+
+		int id = Util.getAsInt(param.get("id"), 0);
+
+		return new ResultData("S-1", "성공", "id", id);
+	}
 }
