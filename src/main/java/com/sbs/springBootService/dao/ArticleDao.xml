@@ -11,6 +11,12 @@
 		WHERE id = #{id}
 	</select>
 	
+	<select id="getBoard" resultType="Board">
+		SELECT *
+		FROM board
+		WHERE id = #{id}
+	</select>
+	
 	<select id="getForPrintArticle" resultType="Article">
 		SELECT A.*,
 		IFNULL(M.nickname, "탈퇴회원") AS extra__writer
