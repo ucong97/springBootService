@@ -23,10 +23,18 @@ public class UsrArticleController {
 
 	@RequestMapping("/usr/article/detail")
 	@ResponseBody
-	public Article showDetail(int id) {
-		Article article = articleService.getArticle(id);
+	public ResultData showDetail(Integer id) {
+		if (id == null) {
+			return new ResultData("F-1", "아이디를 입력해주세요.");
+		}
 
-		return article;
+		Article article = articleService.getForPrintArticle(id);
+
+		if (article == null) {
+			return new ResultData("F-2", "존재하지 않는 게시물번호 입니다.");
+		}
+
+		return new ResultData("S-1", "성공", "article", article);
 	}
 
 	@RequestMapping("/usr/article/list")
@@ -94,7 +102,7 @@ public class UsrArticleController {
 		if (article == null) {
 			return new ResultData("F-1", "해당 게시물은 존재하지 않습니다.");
 		}
-		
+
 		ResultData actorCanDeleteRd = articleService.getActorCanDeleteRd(article, loginedMemberId);
 
 		if (actorCanDeleteRd.isFail()) {
