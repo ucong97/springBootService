@@ -33,7 +33,7 @@
 		<if test="searchKeywordType == 'titleAndBody'">
 			AND (title LIKE CONCAT('%', #{searchKeyword}, '%') OR `body` LIKE CONCAT('%', #{searchKeyword}, '%'))
 		</if>		
-		ORDER BY id DESC		
+		ORDER BY id DESC				
 	</select>
 	
 	<select id="getForPrintArticles" resultType="Article">
@@ -52,7 +52,10 @@
 		<if test="searchKeywordType == 'titleAndBody'">
 			AND (A.title LIKE CONCAT('%', #{searchKeyword}, '%') OR A.`body` LIKE CONCAT('%', #{searchKeyword}, '%'))
 		</if>		
-		ORDER BY A.id DESC		
+		ORDER BY A.id DESC
+		<if test="limitStart != null and limitTake != null">	
+			LIMIT #{limitStart},#{limitTake}	
+		</if>
 	</select>
 	
 	<insert id="addArticle" useGeneratedKeys="true" keyProperty="id">
@@ -72,7 +75,7 @@
 	<update id = "modifyArticle">
 		UPDATE article
 		<set>
-			<if test= "title != null || body != null">
+			<if test= "title != null or body != null">
 				updateDate = NOW(),
 			</if>
 			<if test="title != null">
