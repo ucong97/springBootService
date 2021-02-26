@@ -81,6 +81,10 @@ public class UsrArticleController {
 	public ResultData doAdd(@RequestParam Map<String, Object> param, HttpServletRequest req) {
 		int loginedMemberId = (int) req.getAttribute("loginedMemberId");
 
+		if (param.get("boardId") == null) {
+			return new ResultData("F-1", "게시판번호를 입력해주세요.");
+		}
+		
 		if (param.get("title") == null) {
 			return new ResultData("F-1", "제목을 입력해주세요.");
 		}
