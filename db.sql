@@ -94,3 +94,33 @@ from article;
 SELECT COUNT(*) FROM article; 
 */
 
+# 게시판 테이블 생성
+CREATE TABLE board(
+    id INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    regDate DATETIME NOT NULL,
+    updateDate DATETIME NOT NULL,
+    `code` CHAR(20) UNIQUE NOT NULL,
+    `name` CHAR(20) UNIQUE NOT NULL
+);
+
+# 게시판 테스트 데이터 생성 (공지사항게시판, 자유게시판)
+INSERT INTO board
+SET regDate=NOW(),
+    updateDate = NOW(),
+    `code`= 'notice',
+    `name`="공지사항";
+    
+INSERT INTO board
+SET regDate=NOW(),
+    updateDate = NOW(),
+    `code`= 'free',
+    `name`="자유";
+    
+
+# 게시물 테이블에 게시판번호 칼럼 추가, updateDate 칼럼 뒤에
+ALTER TABLE article ADD COLUMN boardId INT(10) UNSIGNED NOT NULL AFTER updateDate;
+
+# 기존 게시물의 게시판번호를 랜덤으로 지정 ( 1, 2 )
+UPDATE article
+SET boardId = FLOOR(RAND()*2)+1
+WHERE boardId = 0;
