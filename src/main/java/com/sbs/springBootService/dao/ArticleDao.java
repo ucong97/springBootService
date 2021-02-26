@@ -14,7 +14,7 @@ public interface ArticleDao {
 	public Article getArticle(@Param("id") int id);
 
 	public List<Article> getArticles(@Param("searchKeywordType") String searchKeywordType,
-			@Param(value = "searchKeyword") String searchKeyword);
+			@Param("searchKeyword") String searchKeyword);
 
 	public void addArticle(Map<String,Object> param);
 
@@ -24,5 +24,8 @@ public interface ArticleDao {
 			@Param("body") String body);
 
 	public Article getForPrintArticle(@Param("id") int id);
+
+	public List<Article> getForPrintArticles(@Param("searchKeywordType") String searchKeywordType,
+			@Param("searchKeyword") String searchKeyword);
 
 }

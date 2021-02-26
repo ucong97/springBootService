@@ -62,8 +62,8 @@ SET regDate = NOW(),
 updateDate = NOW(),
 loginId = "user1",
 loginPw = "user1",
-`name` = "user1",
-nickname = "user1",
+`name` = "강혁수",
+nickname = "강바람",
 cellphoneNo = "01012341234",
 email = "dbrudrjf21@gmail.com";
 
@@ -72,8 +72,8 @@ SET regDate = NOW(),
 updateDate = NOW(),
 loginId = "user2",
 loginPw = "user2",
-`name` = "user2",
-nickname = "user2",
+`name` = "신라면",
+nickname = "신바람",
 cellphoneNo = "01012341234",
 email = "dbrudrjf21@gmail.com";
 
