@@ -10,6 +10,10 @@ import com.sbs.springBootService.dto.Reply;
 @Mapper
 public interface ReplyDao {
 
-	List<Reply> getForPrintReplies(@Param("relTypeCode") String relTypeCode,@Param("relId")  Integer relId);
+	List<Reply> getForPrintReplies(@Param("relTypeCode") String relTypeCode, @Param("relId") Integer relId);
+
+	Reply getReply(@Param("id") int id);
+
+	void deleteReply(@Param("id") int id);
 
 }

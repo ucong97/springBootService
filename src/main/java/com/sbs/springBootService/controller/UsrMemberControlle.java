@@ -2,6 +2,7 @@ package com.sbs.springBootService.controller;
 
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -93,13 +94,13 @@ public class UsrMemberControlle {
 
 	@RequestMapping("/usr/member/doModify")
 	@ResponseBody
-	public ResultData doModify(HttpSession session, @RequestParam Map<String, Object> param) {
+	public ResultData doModify(@RequestParam Map<String, Object> param, HttpServletRequest req) {
 
 		if (param.isEmpty()) {
 			return new ResultData("F-2", "수정할 정보를 입력해주세요.");
 		}
 
-		int loginedMemberId = (int) session.getAttribute("loginedMemberId");
+		int loginedMemberId = (int) req.getAttribute("loginedMemberId");
 		param.put("id", loginedMemberId);
 
 		return memberService.modifyMember(param);
