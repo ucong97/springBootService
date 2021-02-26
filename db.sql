@@ -65,4 +65,7 @@ loginPw = "user1",
 `name` = "user1",
 nickname = "user1",
 cellphoneNo = "01012341234",
-email = "jangka512@gmail.com";
+email = "dbrudrjf21@gmail.com";
+
+# 게시물 테이블에 회원번호 칼럼 추가
+ALTER TABLE article ADD COLUMN memberId INT(10) UNSIGNED NOT NULL AFTER updateDate;
