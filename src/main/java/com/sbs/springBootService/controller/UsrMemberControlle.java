@@ -19,11 +19,27 @@ import com.sbs.springBootService.service.MemberService;
 public class UsrMemberControlle {
 	@Autowired
 	private MemberService memberService;
-	
+
+	@RequestMapping("/usr/member/memberByAuthKey")
+	@ResponseBody
+	public ResultData showMemberByAuthKey(String authKey) {
+		if (authKey == null) {
+			return new ResultData("F-1", "authKey를 입력해주세요.");
+		}
+		
+		Member existingMember = memberService.getMemberByAuthKey(authKey);
+		
+		if (existingMember == null) {
+			return new ResultData("F-2", "유요하지 않은 authKey 입니다.");
+		}
+		
+		
+		return new ResultData("S-1", String.format("유요한 회원입니다.") , "member",existingMember);
+	}
+
 	@RequestMapping("/usr/member/authKey")
 	@ResponseBody
 	public ResultData showAuthKey(String loginId, String loginPw) {
-
 
 		if (loginId == null) {
 			return new ResultData("F-1", "loginId를 입력해주세요.");
@@ -43,7 +59,9 @@ public class UsrMemberControlle {
 			return new ResultData("F-3", "비밀번호가 일치하지 않습니다.");
 		}
 
-		return new ResultData("S-1", String.format("%s 님 환영합니다.", existingMember.getNickname()), "authKey" , existingMember.getAuthKey());
+		return new ResultData("S-1", String.format("%s 님 환영합니다.", existingMember.getNickname()), "authKey",
+				existingMember.getAuthKey(), "id", existingMember.getId(), "name", existingMember.getName(), "nickname",
+				existingMember.getNickname());
 	}
 
 	@RequestMapping("/usr/member/doJoin")
