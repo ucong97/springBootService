@@ -171,3 +171,14 @@ ALTER TABLE reply ADD KEY (relTypeCode, relId);
 # SELECT * FROM reply WHERE relTypeCode = 'article' AND relId = 5; # O
 # SELECT * FROM reply WHERE relTypeCode = 'article'; # O
 # SELECT * FROM reply WHERE relId = 5 AND relTypeCode = 'article'; # X
+
+# authKey 칼럼을 추가
+ALTER TABLE `member` ADD COLUMN authKey CHAR(130) NOT NULL AFTER loginPw;
+
+# authKey 칼럼에 유니크 인덱스 추가
+ALTER TABLE `springBootService`.`member` ADD UNIQUE INDEX(`authKey`);
+
+# 기존 회원의 authKey 데이터 채우기
+UPDATE `member`
+SET authKey = CONCAT("authKey1__",UUID(),"__",RAND())
+WHERE authKey = '';
