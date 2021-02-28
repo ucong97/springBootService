@@ -30,6 +30,12 @@
 		WHERE loginId = #{loginId}
 	</select>
 	
+	<select id="getMemberByAuthKey" resultType="Member">
+		SELECT *
+		FROM `member`
+		WHERE authKey = #{authKey}
+	</select>
+	
 	<update id="modifyMember">
 		UPDATE `member`
 		<set>
