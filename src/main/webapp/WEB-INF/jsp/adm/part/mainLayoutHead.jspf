@@ -3,7 +3,7 @@
 
 <header class="top-bar h-20 bg-white">
 	<div class="container mx-auto h-full flex">
-		<a href="#" class="logo flex items-center ml-2">
+		<a href="/adm/home/main" class="logo flex items-center ml-2">
 			<span><i class="fas fa-running"></i></span>
 			<span>SPRINGBOOT ADMIN</span>
 		</a>
@@ -13,18 +13,23 @@
 		<nav class="menu-box-1">
 			<ul class="flex h-full">
 				<li>
-					<a href="#" class="flex h-full items-center text-xl px-4 hover:underline">
+					<a href="/adm/home/main" class="flex h-full items-center text-xl px-4 hover:underline">
 						<span>관리자 홈</span>
 					</a>
 				</li>
 				<li>
-					<a href="#" class="flex h-full items-center text-xl px-4 hover:underline">
+					<a href="/adm/board/list" class="flex h-full items-center text-xl px-4 hover:underline">
 						<span>게시판 관리</span>
 					</a>
 				</li>
 				<li>
-					<a href="#" class="flex h-full items-center text-xl px-4 hover:underline">
+					<a href="/adm/article/list" class="flex h-full items-center text-xl px-4 hover:underline">
 						<span>게시물 관리</span>
+					</a>
+				</li>
+				<li>
+					<a href="/adm/member/doLogout" class="flex h-full items-center text-xl px-4 hover:underline">
+						<span>관리자 로그아웃</span>
 					</a>
 				</li>
 			</ul>
