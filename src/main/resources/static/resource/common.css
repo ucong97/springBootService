@@ -37,3 +37,15 @@ html > body {
 .article-list > div:first-child{
 	border-top:none;
 }
+
+.form-row + .form-row {
+	margin-top:10px;
+}
+
+.form-row-input {
+	padding: 15px;
+}
+
+textarea.form-row-input {
+	min-height:100px;
+} 
