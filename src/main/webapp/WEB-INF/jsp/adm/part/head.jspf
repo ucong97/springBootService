@@ -21,4 +21,9 @@
 <link rel="stylesheet" href="/resource/common.css" />
 <link rel="stylesheet" href="/resource/adm/common.css" />
 </head>
+
+<%="<script>"%>
+const param = ${paramJson};
+<%="</script>"%>
+
 <body class="bg-gray-200"> 

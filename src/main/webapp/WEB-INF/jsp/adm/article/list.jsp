@@ -6,6 +6,19 @@
 
 <section class="section-1">
 	<div class="bg-white shadow-md rounded container mx-auto p-8 mt-8">
+		<div>
+			<select class="py-2 select-board-id">
+				<option value="1">공지사항</option>
+				<option value="2">자유게시판</option>
+			</select>
+			<script>
+			$('.section-1 .select-board-id').val(param.boardId);
+			
+			$('.section-1 .select-board-id').change(function() {
+				location.href = '?boardId=' + this.value;
+			});
+			</script>
+		</div>
 		<div class="article-list">
 			<c:forEach items="${articles}" var="article">
 				<div class="py-5 border-t border-gray-200">
@@ -29,6 +42,7 @@
 				</div>
 			</c:forEach>
 		</div>
+		
 	</div>
 </section>
 
