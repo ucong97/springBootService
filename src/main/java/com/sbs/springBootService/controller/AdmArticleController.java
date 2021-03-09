@@ -47,12 +47,12 @@ public class AdmArticleController extends BaseController{
 	public String showList(HttpServletRequest req, @RequestParam(defaultValue = "1") int boardId, String searchKeywordType, String searchKeyword, @RequestParam(defaultValue = "1") int page) {
 		// @RequestParam(defaultValue = "titleAndTitle") String searchKeywordType
 		Board board = articleService.getBoard(boardId);
+		req.setAttribute("board", board);
 		
 		if (board == null) {
 			return msgAndBack(req, "존재하지 않는 게시판입니다.");
 		}
 
-		req.setAttribute("board", board);
 
 		if (searchKeywordType != null) {
 			searchKeywordType = searchKeywordType.trim();
@@ -98,20 +98,19 @@ public class AdmArticleController extends BaseController{
 	}
 	
 	@RequestMapping("/adm/article/doAdd")
-	@ResponseBody
-	public ResultData doAdd(@RequestParam Map<String, Object> param, HttpServletRequest req, MultipartRequest multipartRequest) {		
+	public String doAdd(@RequestParam Map<String, Object> param, HttpServletRequest req, MultipartRequest multipartRequest) {		
 		int loginedMemberId = (int) req.getAttribute("loginedMemberId");
 
 		if (param.get("boardId") == null) {
-			return new ResultData("F-1", "게시판번호를 입력해주세요.");
+			return msgAndBack(req, "게시판번호를 입력해주세요.");
 		}
 		
 		if (param.get("title") == null) {
-			return new ResultData("F-1", "제목을 입력해주세요.");
+			return msgAndBack(req, "제목을 입력해주세요.");
 		}
 
 		if (param.get("body") == null) {
-			return new ResultData("F-1", "내용을 입력해주세요.");
+			return msgAndBack(req,"내용을 입력해주세요.");
 		}
 
 		param.put("memberId", loginedMemberId);
@@ -130,7 +129,7 @@ public class AdmArticleController extends BaseController{
 			}
 		}
 
-		return addArticleRd;
+		return msgAndReplace(req, String.format("%d번 게시물이 작성되었습니다.", newArticleId), "../article/detail?id=" + newArticleId);
 	}
 
 	@RequestMapping("/adm/article/doDelete")
