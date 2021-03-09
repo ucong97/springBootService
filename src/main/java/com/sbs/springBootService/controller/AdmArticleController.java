@@ -17,11 +17,15 @@ import com.sbs.springBootService.dto.Article;
 import com.sbs.springBootService.dto.Board;
 import com.sbs.springBootService.dto.ResultData;
 import com.sbs.springBootService.service.ArticleService;
+import com.sbs.springBootService.service.GenFileService;
+import com.sbs.springBootService.util.Util;
 
 @Controller
 public class AdmArticleController extends BaseController{
 	@Autowired
 	private ArticleService articleService;
+	@Autowired
+	private GenFileService genFileService;
 
 	@RequestMapping("/adm/article/detail")
 	@ResponseBody
@@ -85,14 +89,7 @@ public class AdmArticleController extends BaseController{
 	
 	@RequestMapping("/adm/article/doAdd")
 	@ResponseBody
-	public ResultData doAdd(@RequestParam Map<String, Object> param, HttpServletRequest req, MultipartRequest multipartRequest) {
-
-		Map<String, MultipartFile> fileMap = multipartRequest.getFileMap();
-
-		if ( true ) {
-			return new ResultData("S-1", "테스트", "fileMap.keySet", fileMap.keySet());			
-		}
-		
+	public ResultData doAdd(@RequestParam Map<String, Object> param, HttpServletRequest req, MultipartRequest multipartRequest) {		
 		int loginedMemberId = (int) req.getAttribute("loginedMemberId");
 
 		if (param.get("boardId") == null) {
@@ -109,7 +106,42 @@ public class AdmArticleController extends BaseController{
 
 		param.put("memberId", loginedMemberId);
 
-		return articleService.addArticle(param);
+		ResultData addArticleRd = articleService.addArticle(param);
+
+		int newArticleId = (int) addArticleRd.getBody().get("id");
+
+		Map<String, MultipartFile> fileMap = multipartRequest.getFileMap();
+
+		for (String fileInputName : fileMap.keySet()) {
+			MultipartFile multipartFile = fileMap.get(fileInputName);
+			String[] fileInputNameBits = fileInputName.split("__");
+
+			if (fileInputNameBits[0].equals("file") == false) {
+				continue;
+			}
+
+			int fileSize = (int) multipartFile.getSize();
+
+			if (fileSize <= 0) {
+				continue;
+			}
+
+			String relTypeCode = fileInputNameBits[1];
+			int relId = newArticleId;
+			String typeCode = fileInputNameBits[3];
+			String type2Code = fileInputNameBits[4];
+			int fileNo = Integer.parseInt(fileInputNameBits[5]);
+			String originFileName = multipartFile.getOriginalFilename();
+			String fileExtTypeCode = Util.getFileExtTypeCodeFromFileName(multipartFile.getOriginalFilename());
+			String fileExtType2Code = Util.getFileExtType2CodeFromFileName(multipartFile.getOriginalFilename());
+			String fileExt = Util.getFileExtFromFileName(multipartFile.getOriginalFilename()).toLowerCase();
+			String fileDir = Util.getNowYearMonthDateStr();
+
+			genFileService.saveMeta(relTypeCode, relId, typeCode, type2Code, fileNo, originFileName, fileExtTypeCode,
+					fileExtType2Code, fileExt, fileSize, fileDir);
+		}
+
+		return addArticleRd;
 	}
 
 	@RequestMapping("/adm/article/doDelete")
