@@ -50,15 +50,53 @@ function ArticleAdd__checkAndSubmit(form){
 		}
 	}
 	
-	form.submit();
-	ArticleAdd__submited = true;
+	const startSubmitForm = function(data) {
+		let genFileIdsStr = '';
+		if (data && data.body && data.body.genFileIdsStr) {
+			genFileIdsStr = data.body.genFileIdsStr;
+		}
+		
+		form.genFileIdsStr.value = genFileIdsStr;
+		
+		form.file__article__0__common__attachment__1.value = '';
+		form.file__article__0__common__attachment__2.value = '';
+		
+		form.submit();
+	};
+	const startUploadFiles = function(onSuccess) {
+		var needToUpload = form.file__article__0__common__attachment__1.value.length > 0;
+		if (!needToUpload) {
+			needToUpload = form.file__article__0__common__attachment__2.value.length > 0;
+		}
+		
+		if (needToUpload == false) {
+			onSuccess();
+			return;
+		}
+		
+		var fileUploadFormData = new FormData(form);
+		
+		$.ajax({
+			url : '/common/genFile/doUpload',
+			data : fileUploadFormData,
+			processData : false,
+			contentType : false,
+			dataType : "json",
+			type : 'POST',
+			success : onSuccess
+		});
+	}
 	
+	ArticleAdd__submited = true;
+
+	startUploadFiles(startSubmitForm);
 }
 </script>
 
 <section class="section-1">
 	<div class="bg-white shadow-md rounded container mx-auto p-8 mt-8">
 		<form onsubmit="ArticleAdd__checkAndSubmit(this); return false;" action="doAdd" method="POST" enctype="multipart/form-data">
+			<input type="hidden" name="genFileIdsStr" value="" />
 			<input type="hidden" name="boardId" value="${param.boardId}" />
 			<div class="form-row flex flex-col lg:flex-row">
 				<div class="lg:flex lg:items-center lg:w-28">
