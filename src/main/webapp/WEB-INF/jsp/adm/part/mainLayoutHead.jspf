@@ -25,7 +25,7 @@
 					</a>
 				</li>
 				<li>
-					<a href="/adm/article/list?boardId=1" class="flex h-full items-center text-xl px-4 hover:underline">
+					<a href="/adm/article/list" class="flex h-full items-center text-xl px-4 hover:underline">
 						<span>게시물 관리</span>
 					</a>
 				</li>

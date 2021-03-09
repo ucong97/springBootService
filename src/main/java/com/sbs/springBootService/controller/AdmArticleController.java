@@ -47,10 +47,12 @@ public class AdmArticleController extends BaseController{
 	public String showList(HttpServletRequest req, @RequestParam(defaultValue = "1") int boardId, String searchKeywordType, String searchKeyword, @RequestParam(defaultValue = "1") int page) {
 		// @RequestParam(defaultValue = "titleAndTitle") String searchKeywordType
 		Board board = articleService.getBoard(boardId);
-
+		
 		if (board == null) {
 			return msgAndBack(req, "존재하지 않는 게시판입니다.");
 		}
+
+		req.setAttribute("board", board);
 
 		if (searchKeywordType != null) {
 			searchKeywordType = searchKeywordType.trim();
