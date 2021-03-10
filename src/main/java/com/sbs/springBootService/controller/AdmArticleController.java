@@ -11,7 +11,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartRequest;
 
 import com.sbs.springBootService.dto.Article;
@@ -120,16 +119,6 @@ public class AdmArticleController extends BaseController{
 		ResultData addArticleRd = articleService.addArticle(param);
 
 		int newArticleId = (int) addArticleRd.getBody().get("id");
-
-		Map<String, MultipartFile> fileMap = multipartRequest.getFileMap();
-
-		for (String fileInputName : fileMap.keySet()) {
-			MultipartFile multipartFile = fileMap.get(fileInputName);
-
-			if ( multipartFile.isEmpty() == false ) {
-				genFileService.save(multipartFile, newArticleId);				
-			}
-		}
 
 		return msgAndReplace(req, String.format("%d번 게시물이 작성되었습니다.", newArticleId), "../article/detail?id=" + newArticleId);
 	}
