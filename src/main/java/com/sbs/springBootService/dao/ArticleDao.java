@@ -21,8 +21,8 @@ public interface ArticleDao {
 
 	void deleteArticle(@Param("id") int id);
 
-	void modifyArticle(@Param("id") int id, @Param("title") String title, @Param("body") String body);
-
+	void modifyArticle(Map<String, Object> param);
+	
 	Article getForPrintArticle(@Param("id") int id);
 
 	List<Article> getForPrintArticles(@Param("boardId") int boardId,
