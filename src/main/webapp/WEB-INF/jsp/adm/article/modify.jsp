@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ page import="com.sbs.springBootService.util.Util" %>
 
 <%@ include file="../part/mainLayoutHead.jspf"%>
 
@@ -121,7 +122,7 @@ function ArticleModify__checkAndSubmit(form) {
 							class="form-row-input w-full rounded-sm" />
 						<c:if test="${file != null}">
 							<div>
-								${file.fileName}(${file.fileSize}byte)
+								<a href="${file.forPrintUrl}" target="_blank" class="text-blue-500 hover:underline" href="#">${file.fileName}</a>(${Util.numberFormat(file.fileSize)}byte)
 							</div>
 							<div>
 								<label>
