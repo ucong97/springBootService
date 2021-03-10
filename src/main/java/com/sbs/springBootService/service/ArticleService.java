@@ -15,6 +15,8 @@ import com.sbs.springBootService.util.Util;
 @Service // Conponent
 public class ArticleService {
 	@Autowired
+	private GenFileService genFileService;
+	@Autowired
 	private ArticleDao articleDao;
 	@Autowired
 	private MemberService memberService;
@@ -31,6 +33,18 @@ public class ArticleService {
 		articleDao.addArticle(param);
 
 		int id = Util.getAsInt(param.get("id"), 0);
+		
+		String genFileIdsStr = Util.ifEmpty((String)param.get("genFileIdsStr"), null);
+
+		if ( genFileIdsStr != null ) {
+			List<Integer> genFileIds = Util.getListDividedBy(genFileIdsStr, ",");
+
+			// 파일이 먼저 생성된 후에, 관련 데이터가 생성되는 경우에는, file의 relId가 일단 0으로 저장된다.
+			// 그것을 뒤늦게라도 이렇게 고처야 한다.
+			for (int genFileId : genFileIds) {
+				genFileService.changeRelId(genFileId, id);
+			}
+		}
 
 		return new ResultData("S-1", "성공", "id", id);
 	}

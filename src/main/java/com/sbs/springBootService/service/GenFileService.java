@@ -2,13 +2,18 @@ package com.sbs.springBootService.service;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartRequest;
 
+import com.google.common.base.Joiner;
 import com.sbs.springBootService.dao.GenFileDao;
 import com.sbs.springBootService.dto.GenFile;
 import com.sbs.springBootService.dto.ResultData;
@@ -89,10 +94,38 @@ public class GenFileService {
 			return new ResultData("F-3", "파일저장에 실패하였습니다.");
 		}
 
-		return new ResultData("S-1", "파일이 생성되었습니다.", "id", newGenFileId, "fileRealPath", targetFilePath, "fileName", targetFileName);
+		return new ResultData("S-1", "파일이 생성되었습니다.", "id", newGenFileId, "fileRealPath", targetFilePath, "fileName", targetFileName, "fileInputName", fileInputName);
 	}
 	
 	public GenFile getGenFile(String relTypeCode, int relId, String typeCode, String type2Code, int fileNo) {
 		return genFileDao.getGenFile(relTypeCode, relId, typeCode, type2Code, fileNo);
+	}
+
+	public ResultData saveFiles(MultipartRequest multipartRequest) {
+		Map<String, MultipartFile> fileMap = multipartRequest.getFileMap();
+
+		Map<String, ResultData> filesResultData = new HashMap<>();
+		List<Integer> genFileIds = new ArrayList<>();
+
+		for (String fileInputName : fileMap.keySet()) {
+			MultipartFile multipartFile = fileMap.get(fileInputName);
+
+			if (multipartFile.isEmpty() == false) {
+				ResultData fileResultData = save(multipartFile, 0);
+				int genFileId = (int) fileResultData.getBody().get("id");
+				genFileIds.add(genFileId);
+
+				filesResultData.put(fileInputName, fileResultData);
+			}
+		}
+
+		String genFileIdsStr = Joiner.on(",").join(genFileIds);
+
+		return new ResultData("S-1", "파일을 업로드하였습니다.", "filesResultData", filesResultData, "genFileIdsStr",
+				genFileIdsStr);
+	}
+
+	public void changeRelId(int id, int relId) {
+		genFileDao.changeRelId(id, relId);
 	}
 }
