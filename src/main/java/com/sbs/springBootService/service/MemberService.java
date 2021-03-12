@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.sbs.springBootService.dao.MemberDao;
+import com.sbs.springBootService.dto.GenFile;
 import com.sbs.springBootService.dto.Member;
 import com.sbs.springBootService.dto.ResultData;
 import com.sbs.springBootService.util.Util;
@@ -88,5 +89,30 @@ public class MemberService {
 
 	public Member getForPrintMember(int id) {
 		return memberDao.getForPrintMember(id);
+	}
+
+	public Member getForPrintMemberByAuthKey(String authKey) {
+		Member member = memberDao.getMemberByAuthKey(authKey);
+
+		updateForPrint(member);
+
+		return member;
+	}
+
+	private void updateForPrint(Member member) {
+		GenFile genFile = genFileService.getGenFile("member", member.getId(), "common", "attachment", 1);
+
+		if (genFile != null) {
+			String imgUrl = genFile.getForPrintUrl();
+			member.setExtra__thumbImg(imgUrl);
+		}
+	}
+
+	public Member getForPrintMemberByLoginId(String loginId) {
+		Member member = memberDao.getMemberByLoginId(loginId);
+
+		updateForPrint(member);
+
+		return member;
 	}
 }
