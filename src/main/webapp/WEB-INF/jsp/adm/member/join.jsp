@@ -25,12 +25,19 @@
 				loginId:form.loginId.value
 			},
 			function(data){
-				alert(data.msg);
+				let colorClass = 'text-green-500';
 				
 				if (data.fail){
+					colorClass = 'text-red-500';
+				}
+				
+				$('.loginIdInputMsg').html("<span class='" + colorClass + "'>" + data.msg + "</span>");
+				
+				if ( data.fail ) {
 					form.loginId.focus();
 				}
 				else{
+					JoinForm__validLoginId = data.body.loginId;
 					form.loginPw.focus();
 				}
 			},
@@ -47,6 +54,11 @@
 		if (form.loginId.value.length == 0) {
 			alert('로그인아이디를 입력해주세요.');
 			form.loginId.focus();
+			return;
+		}
+		if ( form.loginId.value != JoinForm__validLoginId ) {
+			alert('로그인아이디 중복체크를해주세요.');
+			$('.btnCheckLoginIdDup').focus();
 			return;
 		}
 		form.loginPw.value = form.loginPw.value.trim();
@@ -120,7 +132,7 @@
 							name="loginId" maxlength="20" />
 							<div class="loginIdInputMsg"></div>
 							<input onclick="JoinForm__checkLoginIdDup(this);"
-							class="btn-primary mt-2 bg-blue-500 hover:bg-blue-dark text-white font-bold py-2 px-4 rounded" type="button" value="체크" />
+							class="btnCheckLoginIdDup btn-primary mt-2 bg-blue-500 hover:bg-blue-dark text-white font-bold py-2 px-4 rounded" type="button" value="체크" />
 					</div>
 				</div>
 				<div class="flex flex-col mb-4 md:flex-row">
