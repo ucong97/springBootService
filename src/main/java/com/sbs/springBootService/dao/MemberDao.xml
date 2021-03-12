@@ -36,6 +36,12 @@
 		WHERE authKey = #{authKey}
 	</select>
 	
+	<select id="getForPrintMember" resultType="Member">
+		SELECT *
+		FROM `member`
+		WHERE id = #{id}
+	</select>
+	
 	<update id="modifyMember">
 		UPDATE `member`
 		<set>

@@ -18,7 +18,7 @@ import com.sbs.springBootService.service.MemberService;
 import com.sbs.springBootService.util.Util;
 
 @Controller
-public class AdmMemberController {
+public class AdmMemberController extends BaseController{
 	@Autowired
 	private MemberService memberService;
 	
@@ -141,6 +141,23 @@ public class AdmMemberController {
 		return Util.msgAndReplace(msg, redirectUrl);
 	}
 
+	@RequestMapping("/adm/member/modify")
+	public String showModify(Integer id, HttpServletRequest req) {
+		if (id == null) {
+			return msgAndBack(req, "id를 입력해주세요.");
+		}
+
+		Member member = memberService.getForPrintMember(id);
+
+		req.setAttribute("member", member);
+
+		if (member == null) {
+			return msgAndBack(req, "존재하지 않는 회원번호 입니다.");
+		}
+
+		return "adm/member/modify";
+	}
+
 	@RequestMapping("/adm/member/doModify")
 	@ResponseBody
 	public ResultData doModify(@RequestParam Map<String, Object> param, HttpServletRequest req) {
@@ -149,10 +166,41 @@ public class AdmMemberController {
 			return new ResultData("F-2", "수정할 정보를 입력해주세요.");
 		}
 
-		int loginedMemberId = (int) req.getAttribute("loginedMemberId");
-		param.put("id", loginedMemberId);
+		int id = Util.getAsInt(param.get("id"),0);
+		
+		if (id == 0) {
+			return new ResultData("F-1", "아이디를 입력해주세요.");
+		}
+
+		if ( Util.isEmpty(param.get("loginPw")) ) {
+			return new ResultData("F-1", "loginPw을 입력해주세요.");
+		}
+
+		if ( Util.isEmpty(param.get("name")) ) {
+			return new ResultData("F-1", "name를 입력해주세요.");
+		}
+		
+		if ( Util.isEmpty(param.get("nickname")) ) {
+			return new ResultData("F-1", "nickname를 입력해주세요.");
+		}
+		
+		if ( Util.isEmpty(param.get("email")) ) {
+			return new ResultData("F-1", "email를 입력해주세요.");
+		}
+		
+		if ( Util.isEmpty(param.get("cellphoneNo")) ) {
+			return new ResultData("F-1", "cellphoneNo를 입력해주세요.");
+		}
+		
+		Member member = memberService.getMember(id);
+		
+		if (member == null) {
+			return new ResultData("F-1", "해당 회원은 존재하지 않습니다.");
+		}
 
 		return memberService.modifyMember(param);
+		
+
 	}
 
 	@RequestMapping("/adm/member/doLogout")
