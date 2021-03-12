@@ -1,5 +1,6 @@
 package com.sbs.springBootService.dao;
 
+import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
@@ -18,4 +19,7 @@ public interface MemberDao {
 	Member getMember(@Param("id") int id);
 
 	Member getMemberByAuthKey(@Param("authKey") String authKey);
+	
+	List<Member> getForPrintMembers(@Param("searchKeywordType") String searchKeywordType, @Param("searchKeyword") String searchKeyword,
+			@Param("limitStart") int limitStart, @Param("limitTake") int limitTake);
 }
