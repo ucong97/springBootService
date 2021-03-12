@@ -164,7 +164,7 @@ public class GenFileService {
 	}
 
 	public void deleteGenFiles(String relTypeCode, int relId) {
-		List<GenFile> genFiles = genFileDao.getGenFiles(relTypeCode, relId);
+		List<GenFile> genFiles = genFileDao.getGenFilesByRelTypeCodeAndRelId(relTypeCode, relId);
 
 		for ( GenFile genFile : genFiles ) {
 			deleteGenFile(genFile);
@@ -172,6 +172,7 @@ public class GenFileService {
 	}
 
 	private void deleteGenFile(GenFile genFile) {
+		// c:/work/springBoot-service-file/article/2021-03
 		String filePath = genFile.getFilePath(genFileDirPath);
 		Util.deleteFile(filePath);
 
