@@ -31,6 +31,9 @@
 		<div class="article-list">
 			<c:forEach items="${articles}" var="article">
 				<c:set var="detailUrl" value="detail?id=${article.id}" />
+				<c:set var="thumbFileNo" value="${String.valueOf(1)}" />
+				<c:set var="thumbFile" value="${article.extra.file__common__attachment[thumbFileNo]}" />
+				<c:set var="thumbUrl" value="${thumbFile.getForPrintUrl()}" />
 				<div class="py-5 border-t border-gray-200">
 					<div class="flex items-center mt-10">
 						<a href="${detailUrl}"  class="font-bold">NO. ${article.id}</a>
@@ -40,9 +43,9 @@
 					</div>
 					<div class="mt-2">
 						<a href="${detailUrl}" class="text-2xl text-gray-700 font-bold hover:underline">${article.title}</a>
-						<c:if test="${article.extra__thumbImg != null}">
+						<c:if test="${thumbUrl != null}">
 							<a class="block" href="${detailUrl}" >
-								<img class="max-w-sm" src="${article.extra__thumbImg}" alt="" />
+								<img class="max-w-sm" src="${thumbUrl}" alt="" />
 							</a>
 						</c:if>
 						<a href="${detailUrl}" class="mt-2 text-gray-600 block">${article.body}</a>
