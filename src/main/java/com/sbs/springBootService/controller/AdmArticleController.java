@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartRequest;
 import com.sbs.springBootService.dto.Article;
 import com.sbs.springBootService.dto.Board;
 import com.sbs.springBootService.dto.GenFile;
+import com.sbs.springBootService.dto.Member;
 import com.sbs.springBootService.dto.ResultData;
 import com.sbs.springBootService.service.ArticleService;
 import com.sbs.springBootService.service.GenFileService;
@@ -118,7 +119,7 @@ public class AdmArticleController extends BaseController{
 	@RequestMapping("/adm/article/doDelete")
 	@ResponseBody
 	public ResultData doDelete(Integer id, HttpServletRequest req) {
-		int loginedMemberId = (int) req.getAttribute("loginedMemberId");
+		Member loginedMember = (Member) req.getAttribute("loginedMember");
 
 		if (id == null) {
 			return new ResultData("F-1", "아이디를 입력해주세요.");
@@ -129,7 +130,7 @@ public class AdmArticleController extends BaseController{
 			return new ResultData("F-1", "해당 게시물은 존재하지 않습니다.");
 		}
 
-		ResultData actorCanDeleteRd = articleService.getActorCanDeleteRd(article, loginedMemberId);
+		ResultData actorCanDeleteRd = articleService.getActorCanDeleteRd(article, loginedMember);
 
 		if (actorCanDeleteRd.isFail()) {
 			return actorCanDeleteRd;
@@ -169,7 +170,7 @@ public class AdmArticleController extends BaseController{
 	@RequestMapping("/adm/article/doModify")
 	@ResponseBody
 	public ResultData doModify(@RequestParam Map<String, Object> param, String body, HttpServletRequest req) {
-		int loginedMemberId = (int) req.getAttribute("loginedMemberId");
+		Member loginedMember = (Member) req.getAttribute("loginedMember");
 
 		int id = Util.getAsInt(param.get("id"),0);
 		
@@ -191,7 +192,7 @@ public class AdmArticleController extends BaseController{
 			return new ResultData("F-1", "해당 게시물은 존재하지 않습니다.");
 		}
 		
-		ResultData actorCanModifyRd = articleService.getActorCanModifyRd(article, loginedMemberId);
+		ResultData actorCanModifyRd = articleService.getActorCanModifyRd(article, loginedMember);
 
 		if (actorCanModifyRd.isFail()) {
 			return actorCanModifyRd;

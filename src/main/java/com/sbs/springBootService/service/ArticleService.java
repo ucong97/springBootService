@@ -11,6 +11,7 @@ import com.sbs.springBootService.dao.ArticleDao;
 import com.sbs.springBootService.dto.Article;
 import com.sbs.springBootService.dto.Board;
 import com.sbs.springBootService.dto.GenFile;
+import com.sbs.springBootService.dto.Member;
 import com.sbs.springBootService.dto.ResultData;
 import com.sbs.springBootService.util.Util;
 
@@ -71,20 +72,20 @@ public class ArticleService {
 		}
 	}
 
-	public ResultData getActorCanModifyRd(Article article, int actorId) {
-		if (article.getMemberId() == actorId) {
+	public ResultData getActorCanModifyRd(Article article, Member actor) {
+		if (article.getMemberId() == actor.getId()) {
 			return new ResultData("S-1", "가능합니다.");
 		}
 
-		if (memberService.isAdmin(actorId)) {
+		if (memberService.isAdmin(actor)) {
 			return new ResultData("S-2", "가능합니다.");
 		}
 
 		return new ResultData("F-1", "권한이 없습니다.");
 	}
 
-	public ResultData getActorCanDeleteRd(Article article, int actorId) {
-		return getActorCanModifyRd(article, actorId);
+	public ResultData getActorCanDeleteRd(Article article, Member actor) {
+		return getActorCanModifyRd(article, actor);
 	}
 
 	public Article getForPrintArticle(int id) {
