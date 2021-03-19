@@ -3,49 +3,46 @@
 
 <%@ include file="../part/head.jspf"%>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js"></script>
 
 <script>
 	const JoinForm__checkAndSubmitDone = false;
-	
+
 	// 로그인 아이디 중복체크 함수
-	function JoinForm__checkLoginIdDup(){
+	function JoinForm__checkLoginIdDup() {
 		const form = $('.formLogin').get(0);
-		
+
 		form.loginId.value = form.loginId.value.trim();
-		
-		if (form.loginId.value.length == 0){
-			
+
+		if (form.loginId.value.length == 0) {
+
 			return;
 		}
-		
-		$.get(
-			'getLoginIdDup',
-			{
-				loginId:form.loginId.value
-			},
-			function(data){
-				let colorClass = 'text-green-500';
-				
-				if (data.fail){
-					colorClass = 'text-red-500';
-				}
-				
-				$('.loginIdInputMsg').html("<span class='" + colorClass + "'>" + data.msg + "</span>");
-				
-				if ( data.fail ) {
-					form.loginId.focus();
-				}
-				else {
-					JoinForm__validLoginId = data.body.loginId;
-					form.loginPw.focus();
-				}
-			},
-			'json'
-		);
-		
+
+		$.get('getLoginIdDup', {
+			loginId : form.loginId.value
+		},
+				function(data) {
+					let colorClass = 'text-green-500';
+
+					if (data.fail) {
+						colorClass = 'text-red-500';
+					}
+
+					$('.loginIdInputMsg').html(
+							"<span class='" + colorClass + "'>" + data.msg
+									+ "</span>");
+
+					if (data.fail) {
+						form.loginId.focus();
+					} else {
+						JoinForm__validLoginId = data.body.loginId;
+					}
+				}, 'json');
+
 	}
-	
+
 	function JoinForm__checkAndSubmit(form) {
 		if (JoinForm__checkAndSubmitDone) {
 			return;
@@ -56,7 +53,7 @@
 			form.loginId.focus();
 			return;
 		}
-		if ( form.loginId.value != JoinForm__validLoginId ) {
+		if (form.loginId.value != JoinForm__validLoginId) {
 			alert('사용할 수 없는 아이디입니다.');
 			form.loginId.focus();
 			return;
@@ -72,7 +69,7 @@
 			form.loginPwConfirm.focus();
 			return;
 		}
-		if (form.loginPw.value != form.loginPwConfirm.value ) {
+		if (form.loginPw.value != form.loginPwConfirm.value) {
 			alert('로그인비번이 일치하지 않습니다.');
 			form.loginPwConfirm.focus();
 			return;
@@ -101,10 +98,43 @@
 			form.cellphoneNo.focus();
 			return;
 		}
-		form.submit();
-		JoinForm__checkAndSubmitDone = true;
+
+		const submitForm = function(data) {
+			if (data) {
+				form.genFileIdsStr.value = data.body.genFileIdsStr;
+			}
+
+			form.submit();
+			JoinForm__checkAndSubmitDone = true;
+		}
+
+		function startUpload(onSuccess) {
+			if (!form.file__member__0__common__attachment__1.value) {
+				onSuccess();
+				return;
+			}
+
+			const formData = new FormData(form);
+
+			$.ajax({
+				url : '/common/genFile/doUpload',
+				data : formData,
+				processData : false,
+				contentType : false,
+				dataType : "json",
+				type : 'POST',
+				success : onSuccess
+			});
+
+			// 파일을 업로드 한 후
+			// 기다린다.
+			// 응답을 받는다.
+			// onSuccess를 실행한다.
+		}
+
+		startUpload(submitForm);
 	}
-	
+
 	$(function() {
 		$('.inputLoginId').change(function() {
 			JoinForm__checkLoginIdDup();
@@ -117,17 +147,17 @@
 		class="container mx-auto min-h-screen flex items-center justify-center">
 		<div class="w-full">
 			<div class="logo-bar flex justify-center mt-3">
-				<a href="#" class="logo">
-					<span>
-						<i class="fas fa-people-arrows"></i>
-					</span>
-					<span>UNTACT ADMIN</span>
+				<a href="#" class="logo"> <span> <i
+						class="fas fa-people-arrows"></i>
+				</span> <span>UNTACT ADMIN</span>
 				</a>
 			</div>
-			<form class="formLogin bg-white shadow-md rounded px-8 pt-6 pb-8 mt-4"
+			<form
+				class="formLogin bg-white shadow-md rounded px-8 pt-6 pb-8 mt-4"
 				action="doJoin" method="POST"
 				onsubmit="JoinForm__checkAndSubmit(this); return false;">
-				<input type="hidden" name="redirectUrl" value="${param.redirectUrl}" />
+				<input type="hidden" name="genFileIdsStr" /> <input type="hidden"
+					name="redirectUrl" value="${param.redirectUrl}" />
 				<div class="flex flex-col mb-4 md:flex-row">
 					<div class="p-1 md:w-36 md:flex md:items-center">
 						<span>로그인아이디</span>
@@ -137,7 +167,7 @@
 							class="inputLoginId shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker"
 							autofocus="autofocus" type="text" placeholder="로그인 아이디를 입력해주세요."
 							name="loginId" maxlength="20" />
-							<div class="loginIdInputMsg"></div>
+						<div class="loginIdInputMsg"></div>
 					</div>
 				</div>
 				<div class="flex flex-col mb-4 md:flex-row">
@@ -159,7 +189,19 @@
 						<input
 							class="shadow appearance-none border border-red rounded w-full py-2 px-3 text-grey-darker"
 							autofocus="autofocus" type="password"
-							placeholder="로그인 비밀번호를 입력해주세요." name="loginPwConfirm" maxlength="20" />
+							placeholder="로그인 비밀번호를 입력해주세요." name="loginPwConfirm"
+							maxlength="20" />
+					</div>
+				</div>
+				<div class="flex flex-col mb-4 md:flex-row">
+					<div class="p-1 md:w-36 md:flex md:items-center">
+						<span>프로필이미지</span>
+					</div>
+					<div class="p-1 md:flex-grow">
+						<input accept="image/gif, image/jpeg, image/png"
+							class="shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker"
+							autofocus="autofocus" type="file" placeholder="프로필이미지를 선택해주세요."
+							name="file__member__0__common__attachment__1" maxlength="20" />
 					</div>
 				</div>
 				<div class="flex flex-col mb-4 md:flex-row">
@@ -202,8 +244,9 @@
 					<div class="p-1 md:flex-grow">
 						<input
 							class="shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker"
-							autofocus="autofocus" type="tel" placeholder="휴대전화번호를 입력해주세요.(- 없이 입력해주세요.)"
-							name="cellphoneNo" maxlength="11" />
+							autofocus="autofocus" type="tel"
+							placeholder="휴대전화번호를 입력해주세요.(- 없이 입력해주세요.)" name="cellphoneNo"
+							maxlength="11" />
 					</div>
 				</div>
 				<div class="flex flex-col mb-4 md:flex-row">
@@ -213,8 +256,10 @@
 					<div class="p-1">
 						<input
 							class="btn-primary bg-blue-500 hover:bg-blue-dark text-white font-bold py-2 px-4 rounded"
-							type="submit" value="회원가입" />
-						<input onclick="history.back();" type="button" class="btn-info bg-green-500 hover:bg-blue-dark text-white font-bold py-2 px-4 rounded inline-block" value="뒤로가기" />
+							type="submit" value="회원가입" /> <input onclick="history.back();"
+							type="button"
+							class="btn-info bg-green-500 hover:bg-blue-dark text-white font-bold py-2 px-4 rounded inline-block"
+							value="뒤로가기" />
 					</div>
 				</div>
 			</form>
