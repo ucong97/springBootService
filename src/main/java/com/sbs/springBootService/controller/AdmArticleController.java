@@ -82,6 +82,23 @@ public class AdmArticleController extends BaseController{
 		
 		int totalPage = (int)Math.ceil(totalItemsCount / (double)itemsInAPage);
 
+		int pageMenuArmSize = 2;
+		int pageMenuStart = page - pageMenuArmSize;
+
+		if (pageMenuStart < 1) {
+			pageMenuStart = 1;
+		}
+		
+
+		int pageMenuEnd = page + pageMenuArmSize;
+		if (pageMenuEnd > totalPage) {
+			pageMenuEnd = totalPage;
+		}
+		
+		if ( page < 3 ) {
+			pageMenuEnd = 5;
+		}
+
 		List<Article> articles = articleService.getForPrintArticles(boardId, searchKeywordType, searchKeyword, page,
 				itemsInAPage);
 
@@ -89,6 +106,9 @@ public class AdmArticleController extends BaseController{
 		req.setAttribute("articles", articles);
 		req.setAttribute("page", page);
 		req.setAttribute("totalPage", totalPage);
+		req.setAttribute("pageMenuArmSize", pageMenuArmSize);
+		req.setAttribute("pageMenuStart", pageMenuStart);
+		req.setAttribute("pageMenuEnd", pageMenuEnd);
 		
 		return "adm/article/list";
 	}
