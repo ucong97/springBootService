@@ -61,7 +61,10 @@
 				cellphoneNo = #{cellphoneNo},
 			</if>
 			<if test="email != null">
-				email = #{email}
+				email = #{email},
+			</if>
+			<if test="authLevel != null">
+				authLevel = #{authLevel}
 			</if>												
 		</set>
 		WHERE id = #{id}

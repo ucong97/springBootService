@@ -1,5 +1,6 @@
 package com.sbs.springBootService.controller;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -13,8 +14,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.sbs.springBootService.dto.GenFile;
 import com.sbs.springBootService.dto.Member;
 import com.sbs.springBootService.dto.ResultData;
+import com.sbs.springBootService.service.GenFileService;
 import com.sbs.springBootService.service.MemberService;
 import com.sbs.springBootService.util.Util;
 
@@ -22,6 +25,8 @@ import com.sbs.springBootService.util.Util;
 public class AdmMemberController extends BaseController{
 	@Autowired
 	private MemberService memberService;
+	@Autowired
+	private GenFileService genFileService;
 	
 	@GetMapping("/adm/member/getLoginIdDup")
 	@ResponseBody
@@ -186,56 +191,37 @@ public class AdmMemberController extends BaseController{
 
 		Member member = memberService.getForPrintMember(id);
 
-		req.setAttribute("member", member);
-
 		if (member == null) {
 			return msgAndBack(req, "존재하지 않는 회원번호 입니다.");
 		}
+
+		List<GenFile> files = genFileService.getGenFiles("member", member.getId(), "common", "attachment");
+		Map<String, GenFile> filesMap = new HashMap<>();
+
+		for (GenFile file : files) {
+			filesMap.put(file.getFileNo() + "", file);
+		}
+
+		member.getExtraNotNull().put("file__common__attachment", filesMap);
+	
+		req.setAttribute("member", member);
+
 
 		return "adm/member/modify";
 	}
 
 	@RequestMapping("/adm/member/doModify")
 	@ResponseBody
-	public ResultData doModify(@RequestParam Map<String, Object> param, HttpServletRequest req) {
-
-		if (param.isEmpty()) {
-			return new ResultData("F-2", "수정할 정보를 입력해주세요.");
-		}
+	public String doModify(@RequestParam Map<String, Object> param, HttpServletRequest req) {
 
 		int id = Util.getAsInt(param.get("id"),0);
 		
-		if (id == 0) {
-			return new ResultData("F-1", "아이디를 입력해주세요.");
-		}
+		param.put("id", id);
+		
+		ResultData modifyMemberRd = memberService.modifyMember(param);
+		String redirectUrl = "/adm/member/list";
 
-		if ( Util.isEmpty(param.get("loginPw")) ) {
-			return new ResultData("F-1", "loginPw을 입력해주세요.");
-		}
-
-		if ( Util.isEmpty(param.get("name")) ) {
-			return new ResultData("F-1", "name를 입력해주세요.");
-		}
-		
-		if ( Util.isEmpty(param.get("nickname")) ) {
-			return new ResultData("F-1", "nickname를 입력해주세요.");
-		}
-		
-		if ( Util.isEmpty(param.get("email")) ) {
-			return new ResultData("F-1", "email를 입력해주세요.");
-		}
-		
-		if ( Util.isEmpty(param.get("cellphoneNo")) ) {
-			return new ResultData("F-1", "cellphoneNo를 입력해주세요.");
-		}
-		
-		Member member = memberService.getMember(id);
-		
-		if (member == null) {
-			return new ResultData("F-1", "해당 회원은 존재하지 않습니다.");
-		}
-
-		return memberService.modifyMember(param);
+		return Util.msgAndReplace(modifyMemberRd.getMsg(), redirectUrl);
 		
 
 	}
